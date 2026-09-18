@@ -1,0 +1,82 @@
+{
+  "atendimentos": [
+    [
+      "190216065294577@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.054Z"
+      }
+    ],
+    [
+      "248159435542548@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.071Z"
+      }
+    ],
+    [
+      "197577119117554@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.087Z"
+      }
+    ],
+    [
+      "239642213359705@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.099Z"
+      }
+    ],
+    [
+      "269677121007724@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.119Z"
+      }
+    ],
+    [
+      "193402427707477@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.130Z"
+      }
+    ],
+    [
+      "149387720282339@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.142Z"
+      }
+    ]
+  ],
+  "botSilenciado": []
+}

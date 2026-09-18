@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#132e29">
+  <title>ME Motos · Assistência</title>
+  <link rel="icon" href="/marca.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="ME Motos início"><img src="/marca.svg" alt=""><span>ME MOTOS<small>ELÉTRICAS</small></span></a>
+    <div class="workspace"><span class="workspace-icon" data-icon="tool"></span><div>Assistência técnica<small>Central de atendimento</small></div><span class="online-dot"></span></div>
+    <p class="nav-label">PRINCIPAL</p>
+    <nav aria-label="Navegação principal">
+      <button class="nav-item active" data-page="overview"><span data-icon="grid"></span>Visão geral</button>
+      <button class="nav-item" data-page="tickets"><span data-icon="inbox"></span>Chamados<span id="nav-count" class="nav-count">—</span></button>
+      <button class="nav-item" data-page="photos"><span data-icon="image"></span>Galeria de imagens</button>
+      <button class="nav-item" data-page="reports"><span data-icon="chart"></span>Indicadores</button>
+    </nav>
+    <div class="sidebar-bottom"><div class="sidebar-note"><span data-icon="bolt"></span><strong>Da primeira mensagem<br>à moto pronta.</strong><p>Informações, imagens e serviço no mesmo lugar.</p></div><div class="profile"><span class="avatar">ME</span><div>Equipe ME Motos<small>Área interna da assistência</small></div></div></div>
+  </aside>
+  <div class="app-shell">
+    <header class="topbar"><div class="breadcrumb">ME Motos <span>/</span> <strong id="breadcrumb">Visão geral</strong></div><div class="top-actions"><span class="sync-status" id="sync-status"><i></i>Conectando…</span><button class="icon-button" id="refresh" title="Atualizar chamados" aria-label="Atualizar chamados"><span data-icon="refresh"></span></button><span class="top-divider"></span><span class="avatar small">ME</span></div></header>
+    <main>
+      <div class="page-heading"><div><div class="eyebrow" id="eyebrow">SEU DIA NA ASSISTÊNCIA</div><h1 id="page-title">Visão geral</h1><p id="page-subtitle">Acompanhe os chamados e organize os próximos atendimentos.</p></div><div class="heading-actions"><div class="mode-switch" aria-label="Origem dos dados"><button id="real-mode" class="selected">Dados reais</button><button id="demo-mode">Demonstração</button></div><button class="button secondary" id="export"><span data-icon="download"></span>Exportar CSV</button></div></div>
+      <div id="banner" class="banner" hidden></div>
+      <div id="error-banner" class="banner error" role="alert" hidden></div>
+      <div id="stats" class="stats"></div>
+      <div id="content"><div class="loading">Carregando seus chamados…</div></div>
+      <footer class="page-footer"><span>ME Motos Elétricas · Central de assistência</span><span id="updated-at">Atualização automática a cada 15 segundos</span></footer>
+    </main>
+  </div>
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+  <section id="drawer" class="drawer" role="dialog" aria-modal="true" aria-label="Detalhes do chamado" hidden></section>
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Visualização de imagem" hidden></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "me-motos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Atendimento da ME Motos Elétricas pelo WhatsApp",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test",
+    "check": "node --check index.js && node --check consultar-chamado.js && node --check registros.js && node --check dados-chamado.js",
+    "chamado": "node consultar-chamado.js",
+    "planilha": "node exportar-chamados.js",
+    "painel": "node painel/server.js"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "qrcode-terminal": "^0.12.0",
+    "whatsapp-web.js": "^1.34.7"
+  }
+}

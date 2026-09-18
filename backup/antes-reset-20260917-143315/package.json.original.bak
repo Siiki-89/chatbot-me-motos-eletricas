@@ -1,0 +1,967 @@
+// =====================================
+// IMPORTAÇÕES
+// =====================================
+const qrcode = require("qrcode-terminal");
+const { Client, LocalAuth } = require("whatsapp-web.js");
+const fs = require("fs");
+const path = require("path");
+
+// =====================================
+// CONFIGURAÇÃO DO CLIENTE
+// =====================================
+const client = new Client({
+  authStrategy: new LocalAuth(),
+
+  puppeteer: {
+    headless: true,
+
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
+    ],
+  },
+});
+
+// =====================================
+// NÚMERO DO VENDEDOR
+// =====================================
+
+const numeroVendas = "5547991651258";
+
+const mensagemVendas =
+  "Olá Gabriel! Vim pelo atendimento da ME Motos Elétricas e gostaria de falar sobre vendas.";
+
+// =====================================
+// ARQUIVO DE ESTADO
+// =====================================
+
+const ARQUIVO_ESTADO = path.join(
+  __dirname,
+  "estado-bot.json"
+);
+
+// =====================================
+// NÚMEROS QUE O BOT DEVE IGNORAR
+//
+// Formato:
+// 55 + DDD + número + @c.us
+//
+// Exemplo:
+// "5547999999999@c.us"
+// =====================================
+
+const numerosIgnorados = new Set([
+  // "5547999999999@c.us",
+]);
+
+// =====================================
+// MEMÓRIA
+// =====================================
+
+let atendimentos = new Map();
+
+let botSilenciado = new Set();
+
+let redirecionadosVendas = new Map();
+
+// =====================================
+// CARREGA ESTADO
+// =====================================
+
+function carregarEstado() {
+  try {
+    if (!fs.existsSync(ARQUIVO_ESTADO)) {
+      return;
+    }
+
+    const dados = JSON.parse(
+      fs.readFileSync(
+        ARQUIVO_ESTADO,
+        "utf8"
+      )
+    );
+
+    if (dados.atendimentos) {
+      atendimentos = new Map(
+        dados.atendimentos
+      );
+    }
+
+    if (dados.botSilenciado) {
+      botSilenciado = new Set(
+        dados.botSilenciado
+      );
+    }
+
+    console.log(
+      "Estado anterior carregado."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Erro ao carregar estado:",
+      error
+    );
+
+  }
+}
+
+// =====================================
+// SALVA ESTADO
+// =====================================
+
+function salvarEstado() {
+  try {
+
+    const dados = {
+      atendimentos:
+        Array.from(
+          atendimentos.entries()
+        ),
+
+      botSilenciado:
+        Array.from(
+          botSilenciado
+        ),
+    };
+
+    fs.writeFileSync(
+      ARQUIVO_ESTADO,
+
+      JSON.stringify(
+        dados,
+        null,
+        2
+      )
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Erro ao salvar estado:",
+      error
+    );
+
+  }
+}
+
+carregarEstado();
+
+// =====================================
+// NORMALIZA TEXTO
+// =====================================
+
+function normalizarTexto(texto = "") {
+  return texto
+
+    .normalize("NFD")
+
+    .replace(
+      /[\u0300-\u036f]/g,
+      ""
+    )
+
+    .toLowerCase()
+
+    .trim()
+
+    .replace(
+      /\s+/g,
+      " "
+    );
+}
+
+// =====================================
+// DELAY
+// =====================================
+
+const delay = (ms) =>
+  new Promise(
+    (resolve) =>
+      setTimeout(resolve, ms)
+  );
+
+// =====================================
+// SIMULA DIGITAÇÃO
+// =====================================
+
+async function digitar(chat) {
+  try {
+
+    await chat.sendStateTyping();
+
+    await delay(1000);
+
+    await chat.clearState();
+
+  } catch (error) {
+    // Não interfere no atendimento
+  }
+}
+
+// =====================================
+// SAUDAÇÃO
+// =====================================
+
+function obterSaudacao() {
+
+  const horaTexto =
+    new Intl.DateTimeFormat(
+      "pt-BR",
+      {
+        hour: "2-digit",
+        hour12: false,
+        timeZone:
+          "America/Sao_Paulo",
+      }
+    ).format(
+      new Date()
+    );
+
+  const hora =
+    Number(horaTexto) % 24;
+
+  if (
+    hora >= 5 &&
+    hora < 12
+  ) {
+    return "Bom dia";
+  }
+
+  if (
+    hora >= 12 &&
+    hora < 18
+  ) {
+    return "Boa tarde";
+  }
+
+  return "Boa noite";
+}
+
+// =====================================
+// QR CODE
+// =====================================
+
+client.on(
+  "qr",
+
+  (qr) => {
+
+    console.log(
+      "Escaneie o QR Code abaixo:"
+    );
+
+    qrcode.generate(
+      qr,
+      {
+        small: true,
+      }
+    );
+  }
+);
+
+// =====================================
+// CONECTADO
+// =====================================
+
+client.on(
+  "ready",
+
+  () => {
+
+    console.log(
+      "WhatsApp da ME Motos Elétricas conectado."
+    );
+
+  }
+);
+
+// =====================================
+// DESCONEXÃO
+// =====================================
+
+client.on(
+  "disconnected",
+
+  (reason) => {
+
+    console.log(
+      "WhatsApp desconectado:",
+      reason
+    );
+
+  }
+);
+
+// =====================================
+// INICIALIZA
+// =====================================
+
+client.initialize();
+
+// =====================================================
+// MENSAGENS RECEBIDAS
+// =====================================================
+
+client.on(
+  "message",
+
+  async (msg) => {
+
+    try {
+
+      // =====================================
+      // IGNORA GRUPOS
+      // =====================================
+
+      if (!msg.from) {
+        return;
+      }
+
+      if (
+        msg.from.endsWith("@g.us")
+      ) {
+        return;
+      }
+
+      const numero = msg.from;
+
+      // =====================================
+      // IGNORA LISTA MANUAL
+      // =====================================
+
+      if (
+        numerosIgnorados.has(numero)
+      ) {
+        return;
+      }
+
+      // =====================================
+      // IGNORA CONTATOS SALVOS
+      // =====================================
+
+      try {
+
+        const contato =
+          await msg.getContact();
+
+        if (
+          contato &&
+          contato.isMyContact
+        ) {
+
+          console.log(
+            `Contato salvo ignorado: ${
+              contato.name ||
+              contato.pushname ||
+              contato.number ||
+              numero
+            }`
+          );
+
+          return;
+        }
+
+      } catch (
+        erroContato
+      ) {
+
+        console.log(
+          "Não foi possível verificar se o contato está salvo:",
+          erroContato.message
+        );
+
+      }
+
+      // =====================================
+      // REDIRECIONAMENTO DE VENDAS
+      //
+      // Ignora mensagens seguintes durante
+      // 10 minutos para não reiniciar o menu
+      // se o cliente disser "obrigado".
+      // =====================================
+
+      if (
+        redirecionadosVendas.has(
+          numero
+        )
+      ) {
+
+        const ate =
+          redirecionadosVendas.get(
+            numero
+          );
+
+        if (
+          Date.now() < ate
+        ) {
+          return;
+        }
+
+        redirecionadosVendas.delete(
+          numero
+        );
+      }
+
+      // =====================================
+      // BOT SILENCIADO
+      //
+      // Cliente já está aguardando
+      // atendimento humano.
+      // =====================================
+
+      if (
+        botSilenciado.has(numero)
+      ) {
+        return;
+      }
+
+      const chat =
+        await msg.getChat();
+
+      if (
+        chat.isGroup
+      ) {
+        return;
+      }
+
+      const textoOriginal =
+        msg.body?.trim() || "";
+
+      const texto =
+        normalizarTexto(
+          textoOriginal
+        );
+
+      // =====================================
+      // NOVO ATENDIMENTO
+      // =====================================
+
+      if (
+        !atendimentos.has(numero)
+      ) {
+
+        const novoAtendimento = {
+
+          etapa: "setor",
+
+          setor: "",
+
+          tipoAtendimento: "",
+
+          clienteME: null,
+
+          dadosInformados: "",
+
+          criadoEm:
+            new Date().toISOString(),
+
+        };
+
+        atendimentos.set(
+          numero,
+          novoAtendimento
+        );
+
+        salvarEstado();
+
+        await digitar(chat);
+
+        await msg.reply(
+          `${obterSaudacao()}!\n\n` +
+
+          `Você está falando com a *ME Motos Elétricas*.\n\n` +
+
+          `Para direcionarmos seu atendimento corretamente, selecione a opção que corresponde à sua necessidade:\n\n` +
+
+          `*1 - Vendas*\n` +
+
+          `*2 - Assistência Técnica*`
+        );
+
+        return;
+      }
+
+      const atendimento =
+        atendimentos.get(numero);
+
+      // =====================================
+      // ETAPA 1
+      // VENDAS OU ASSISTÊNCIA
+      // =====================================
+
+      if (
+        atendimento.etapa ===
+        "setor"
+      ) {
+
+        // =============================
+        // VENDAS
+        // =============================
+
+        if (
+          texto === "1" ||
+          texto === "vendas" ||
+          texto === "vendedor"
+        ) {
+
+          atendimento.setor =
+            "Vendas";
+
+          const linkVendas =
+            `https://wa.me/${numeroVendas}?text=${encodeURIComponent(
+              mensagemVendas
+            )}`;
+
+          await digitar(chat);
+
+          await msg.reply(
+            `Perfeito.\n\n` +
+
+            `O atendimento de *Vendas* é realizado em outro WhatsApp.\n\n` +
+
+            `Fale diretamente com o Gabriel pelo link abaixo:\n\n` +
+
+            `${linkVendas}`
+          );
+
+          // Apaga atendimento desse número,
+          // pois vendas acontece em outro WhatsApp.
+
+          atendimentos.delete(
+            numero
+          );
+
+          // Evita que "obrigado", "certo" etc.
+          // iniciem outro menu imediatamente.
+
+          redirecionadosVendas.set(
+            numero,
+            Date.now() +
+              10 * 60 * 1000
+          );
+
+          salvarEstado();
+
+          console.log(
+            `Cliente encaminhado para vendas: ${numero}`
+          );
+
+          return;
+        }
+
+        // =============================
+        // ASSISTÊNCIA
+        // =============================
+
+        if (
+          texto === "2" ||
+          texto.includes(
+            "assistencia"
+          ) ||
+          texto.includes(
+            "suporte"
+          )
+        ) {
+
+          atendimento.setor =
+            "Assistência Técnica";
+
+          atendimento.etapa =
+            "tipo_suporte";
+
+          salvarEstado();
+
+          await digitar(chat);
+
+          await msg.reply(
+            `Qual tipo de atendimento você precisa?\n\n` +
+
+            `*1 - Manutenção*\n` +
+
+            `*2 - Assistência Técnica / Garantia*`
+          );
+
+          return;
+        }
+
+        // =============================
+        // INVÁLIDO
+        // =============================
+
+        await msg.reply(
+          `Por favor, selecione uma das opções:\n\n` +
+
+          `*1 - Vendas*\n` +
+
+          `*2 - Assistência Técnica*`
+        );
+
+        return;
+      }
+
+      // =====================================
+      // ETAPA 2
+      // TIPO DE ATENDIMENTO
+      // =====================================
+
+      if (
+        atendimento.etapa ===
+        "tipo_suporte"
+      ) {
+
+        if (
+          texto === "1" ||
+          texto.includes(
+            "manutencao"
+          )
+        ) {
+
+          atendimento.tipoAtendimento =
+            "Manutenção";
+
+        } else if (
+
+          texto === "2" ||
+
+          texto.includes(
+            "garantia"
+          ) ||
+
+          texto.includes(
+            "assistencia"
+          )
+
+        ) {
+
+          atendimento.tipoAtendimento =
+            "Assistência Técnica / Garantia";
+
+        } else {
+
+          await msg.reply(
+            `Por favor, selecione uma das opções:\n\n` +
+
+            `*1 - Manutenção*\n` +
+
+            `*2 - Assistência Técnica / Garantia*`
+          );
+
+          return;
+        }
+
+        atendimento.etapa =
+          "cliente_me";
+
+        salvarEstado();
+
+        await digitar(chat);
+
+        await msg.reply(
+          `A moto foi comprada na *ME Motos Elétricas*?\n\n` +
+
+          `*1 - Sim*\n` +
+
+          `*2 - Não*`
+        );
+
+        return;
+      }
+
+      // =====================================
+      // ETAPA 3
+      // COMPROU NA ME?
+      // =====================================
+
+      if (
+        atendimento.etapa ===
+        "cliente_me"
+      ) {
+
+        // =============================
+        // SIM
+        // =============================
+
+        if (
+          texto === "1" ||
+          texto === "sim"
+        ) {
+
+          atendimento.clienteME =
+            true;
+
+          atendimento.etapa =
+            "dados_cliente";
+
+          salvarEstado();
+
+          await digitar(chat);
+
+          await msg.reply(
+            `Perfeito! Para agilizar seu atendimento, informe os dados abaixo:\n\n` +
+
+            `*CPF do proprietário/comprador:*\n` +
+
+            `*Nº da Nota Fiscal:*\n` +
+
+            `*Modelo da moto:*\n` +
+
+            `*Descreva o problema:*\n\n` +
+
+            `Você pode enviar todas essas informações em uma única mensagem.`
+          );
+
+          return;
+        }
+
+        // =============================
+        // NÃO
+        // =============================
+
+        if (
+          texto === "2" ||
+          texto === "nao"
+        ) {
+
+          atendimento.clienteME =
+            false;
+
+          atendimento.etapa =
+            "dados_cliente";
+
+          salvarEstado();
+
+          await digitar(chat);
+
+          await msg.reply(
+            `Para agilizar seu atendimento, informe os dados abaixo:\n\n` +
+
+            `*Nome:*\n` +
+
+            `*Modelo da moto:*\n` +
+
+            `*Descreva o problema:*\n\n` +
+
+            `Você pode enviar todas essas informações em uma única mensagem.`
+          );
+
+          return;
+        }
+
+        await msg.reply(
+          `Por favor, selecione uma das opções:\n\n` +
+
+          `*1 - Sim*\n` +
+
+          `*2 - Não*`
+        );
+
+        return;
+      }
+
+      // =====================================
+      // ETAPA 4
+      // RECEBE OS DADOS
+      // =====================================
+
+      if (
+        atendimento.etapa ===
+        "dados_cliente"
+      ) {
+
+        if (
+          !textoOriginal
+        ) {
+
+          await msg.reply(
+            `Por favor, envie os dados solicitados em uma mensagem de texto.`
+          );
+
+          return;
+        }
+
+        atendimento.dadosInformados =
+          textoOriginal;
+
+        atendimento.etapa =
+          "aguardando_atendente";
+
+        atendimento.triagemFinalizadaEm =
+          new Date().toISOString();
+
+        // =====================================
+        // SILENCIA O BOT
+        // =====================================
+
+        botSilenciado.add(
+          numero
+        );
+
+        salvarEstado();
+
+        await digitar(chat);
+
+        await msg.reply(
+          `Certo. Suas informações foram recebidas.\n\n` +
+
+          `Aguarde, em breve nossa equipe dará continuidade ao seu atendimento.`
+        );
+
+        // =====================================
+        // LOG
+        // =====================================
+
+        console.log(
+          "\n======================================"
+        );
+
+        console.log(
+          "NOVO ATENDIMENTO"
+        );
+
+        console.log(
+          "======================================"
+        );
+
+        console.log(
+          `Cliente: ${numero}`
+        );
+
+        console.log(
+          `Tipo: ${atendimento.tipoAtendimento}`
+        );
+
+        console.log(
+          `Comprou na ME: ${
+            atendimento.clienteME
+              ? "SIM"
+              : "NÃO"
+          }`
+        );
+
+        console.log(
+          `Dados:\n${atendimento.dadosInformados}`
+        );
+
+        console.log(
+          "======================================\n"
+        );
+
+        return;
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Erro no processamento da mensagem:",
+        error
+      );
+
+    }
+  }
+);
+
+// =====================================================
+// ENCERRAMENTO DO ATENDIMENTO
+//
+// Detecta mensagens enviadas pelo próprio número
+// da ME.
+// =====================================================
+
+client.on(
+  "message_create",
+
+  async (msg) => {
+
+    try {
+
+      // Somente mensagens enviadas pela ME
+      if (
+        !msg.fromMe
+      ) {
+        return;
+      }
+
+      const texto =
+        normalizarTexto(
+          msg.body || ""
+        );
+
+      // =====================================
+      // FRASE-CHAVE
+      // =====================================
+
+      if (
+        !texto.includes(
+          "este atendimento sera finalizado"
+        )
+      ) {
+        return;
+      }
+
+      // =====================================
+      // IDENTIFICA O CLIENTE
+      // =====================================
+
+      let numeroCliente =
+        msg.to;
+
+      if (
+        !numeroCliente
+      ) {
+
+        const chat =
+          await msg.getChat();
+
+        numeroCliente =
+          chat.id._serialized;
+      }
+
+      // Ignora grupos
+      if (
+        numeroCliente.endsWith(
+          "@g.us"
+        )
+      ) {
+        return;
+      }
+
+      // =====================================
+      // LIBERA O CLIENTE
+      // =====================================
+
+      botSilenciado.delete(
+        numeroCliente
+      );
+
+      atendimentos.delete(
+        numeroCliente
+      );
+
+      salvarEstado();
+
+      console.log(
+        "\nATENDIMENTO ENCERRADO"
+      );
+
+      console.log(
+        `Cliente: ${numeroCliente}`
+      );
+
+      console.log(
+        "O próximo contato iniciará um novo atendimento.\n"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Erro ao encerrar atendimento:",
+        error
+      );
+
+    }
+  }
+);

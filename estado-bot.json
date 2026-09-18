@@ -1,0 +1,278 @@
+{
+  "ultimoChamado": 9,
+  "chamados": [
+    [
+      "ME-000005",
+      {
+        "protocolo": "ME-000005",
+        "etapa": "aguardando_atendente",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "Assistência Técnica / Garantia",
+        "clienteME": true,
+        "dadosInformados": "Voltar",
+        "criadoEm": "2026-09-18T19:22:34.177Z",
+        "triagemFinalizadaEm": "2026-09-18T19:23:40.444Z",
+        "numero": "207786709373171@lid",
+        "status": "aguardando_atendente",
+        "motivo": ""
+      }
+    ],
+    [
+      "ME-000006",
+      {
+        "protocolo": "ME-000006",
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-18T19:27:31.160Z",
+        "numero": "0@c.us",
+        "status": "aberto",
+        "motivo": ""
+      }
+    ],
+    [
+      "ME-000007",
+      {
+        "protocolo": "ME-000007",
+        "etapa": "dados_cliente",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "Assistência Técnica / Garantia",
+        "clienteME": true,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-18T19:29:35.885Z",
+        "numero": "225593727680571@lid",
+        "status": "encerrado",
+        "motivo": "cliente",
+        "encerradoEm": "2026-09-18T19:30:50.887Z"
+      }
+    ],
+    [
+      "ME-000008",
+      {
+        "protocolo": "ME-000008",
+        "etapa": "setor",
+        "setor": "Vendas",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-18T19:30:56.706Z",
+        "numero": "225593727680571@lid",
+        "status": "encerrado",
+        "motivo": "encaminhado_vendas",
+        "encerradoEm": "2026-09-18T19:31:08.274Z"
+      }
+    ],
+    [
+      "ME-000001",
+      {
+        "etapa": "aguardando_atendente",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "Assistência Técnica / Garantia",
+        "clienteME": true,
+        "dadosInformados": "ola",
+        "criadoEm": "2026-09-18T19:05:02.415Z",
+        "protocolo": "ME-000001",
+        "triagemFinalizadaEm": "2026-09-18T19:10:03.705Z",
+        "numero": "71121017782418@lid",
+        "status": "encerrado",
+        "motivo": "loja",
+        "encerradoEm": "2026-09-18T19:10:19.924Z"
+      }
+    ],
+    [
+      "ME-000002",
+      {
+        "protocolo": "ME-000002",
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-18T19:10:34.512Z",
+        "numero": "71121017782418@lid",
+        "status": "encerrado",
+        "motivo": "loja",
+        "encerradoEm": "2026-09-18T19:20:37.661Z"
+      }
+    ],
+    [
+      "ME-000003",
+      {
+        "protocolo": "ME-000003",
+        "etapa": "dados_cliente",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "Assistência Técnica / Garantia",
+        "clienteME": true,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-18T19:20:46.647Z",
+        "numero": "71121017782418@lid",
+        "status": "encerrado",
+        "motivo": "loja",
+        "encerradoEm": "2026-09-18T19:21:25.974Z"
+      }
+    ],
+    [
+      "ME-000004",
+      {
+        "protocolo": "ME-000004",
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-18T19:21:49.819Z",
+        "numero": "71121017782418@lid",
+        "status": "encerrado",
+        "motivo": "cliente",
+        "encerradoEm": "2026-09-18T19:21:59.026Z"
+      }
+    ],
+    [
+      "ME-000009",
+      {
+        "protocolo": "ME-000009",
+        "etapa": "aguardando_atendente",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "Assistência Técnica / Garantia",
+        "clienteME": true,
+        "dadosInformados": "101.325.859-28\n0000000001\nFX2\nPara-lama veio com defeito, precisa ser substituído por outro",
+        "criadoEm": "2026-09-18T20:35:28.392Z",
+        "telefone": "554792525297",
+        "nomeCliente": "Alexandre - ME Motos Elétricas",
+        "dadosEstruturados": {},
+        "triagemFinalizadaEm": "2026-09-18T20:36:33.891Z",
+        "numero": "71121017782418@lid",
+        "status": "aguardando_atendente",
+        "motivo": ""
+      }
+    ]
+  ],
+  "redirecionadosVendas": [],
+  "atendimentos": [
+    [
+      "190216065294577@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.054Z"
+      }
+    ],
+    [
+      "248159435542548@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.071Z"
+      }
+    ],
+    [
+      "197577119117554@lid",
+      {
+        "etapa": "tipo_suporte",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.087Z"
+      }
+    ],
+    [
+      "239642213359705@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.099Z"
+      }
+    ],
+    [
+      "269677121007724@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.119Z"
+      }
+    ],
+    [
+      "193402427707477@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.130Z"
+      }
+    ],
+    [
+      "149387720282339@lid",
+      {
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-17T14:32:18.142Z"
+      }
+    ],
+    [
+      "207786709373171@lid",
+      {
+        "protocolo": "ME-000005",
+        "etapa": "aguardando_atendente",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "Assistência Técnica / Garantia",
+        "clienteME": true,
+        "dadosInformados": "Voltar",
+        "criadoEm": "2026-09-18T19:22:34.177Z",
+        "triagemFinalizadaEm": "2026-09-18T19:23:40.444Z"
+      }
+    ],
+    [
+      "0@c.us",
+      {
+        "protocolo": "ME-000006",
+        "etapa": "setor",
+        "setor": "",
+        "tipoAtendimento": "",
+        "clienteME": null,
+        "dadosInformados": "",
+        "criadoEm": "2026-09-18T19:27:31.160Z"
+      }
+    ],
+    [
+      "71121017782418@lid",
+      {
+        "protocolo": "ME-000009",
+        "etapa": "aguardando_atendente",
+        "setor": "Assistência Técnica",
+        "tipoAtendimento": "Assistência Técnica / Garantia",
+        "clienteME": true,
+        "dadosInformados": "101.325.859-28\n0000000001\nFX2\nPara-lama veio com defeito, precisa ser substituído por outro",
+        "criadoEm": "2026-09-18T20:35:28.392Z",
+        "telefone": "554792525297",
+        "nomeCliente": "Alexandre - ME Motos Elétricas",
+        "dadosEstruturados": {},
+        "triagemFinalizadaEm": "2026-09-18T20:36:33.891Z"
+      }
+    ]
+  ],
+  "botSilenciado": [
+    "207786709373171@lid",
+    "225593727680571@lid",
+    "71121017782418@lid"
+  ]
+}

@@ -1,0 +1,13 @@
+2026/09/18-17:35:14.209 6a00 Reusing MANIFEST C:\ME-Motos\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/09/18-17:35:14.210 6a00 Recovering log #25
+2026/09/18-17:35:14.250 6a00 Reusing old log C:\ME-Motos\.wwebjs_auth\session\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000025.log 
+2026/09/18-17:35:16.658 6a00 Level-0 table #30: started
+2026/09/18-17:35:16.715 6a00 Level-0 table #30: 1282975 bytes OK
+2026/09/18-17:35:16.720 6a00 Delete type=0 #25
+2026/09/18-17:35:16.947 68a0 Compacting 1@1 + 1@2 files
+2026/09/18-17:35:17.339 68a0 Generated table #31@1: 64291 keys, 2247499 bytes
+2026/09/18-17:35:17.347 68a0 Generated table #32@1: 1249 keys, 51733 bytes
+2026/09/18-17:35:17.347 68a0 Compacted 1@1 + 1@2 files => 2299232 bytes
+2026/09/18-17:35:17.348 68a0 compacted to: files[ 0 0 2 0 0 0 0 ]
+2026/09/18-17:35:17.349 68a0 Delete type=2 #27
+2026/09/18-17:35:17.350 68a0 Delete type=2 #30
